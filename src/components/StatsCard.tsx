@@ -1,5 +1,5 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import { DivideIcon as LucideIcon } from 'lucide-react';
 import { Card, CardContent } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { cn } from '../utils/cn';
