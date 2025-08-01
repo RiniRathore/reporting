@@ -5,6 +5,7 @@ import { StatsCard } from './components/StatsCard';
 import { LineChart } from './components/charts/LineChart';
 import { BarChart } from './components/charts/BarChart';
 import { DonutChart } from './components/charts/DonutChart';
+import { FunnelChart } from './components/charts/FunnelChart';
 import { RecentActivity } from './components/RecentActivity';
 import { 
   Users, 
@@ -12,7 +13,11 @@ import {
   ShoppingCart, 
   TrendingUp,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Eye,
+  MousePointer,
+  CreditCard,
+  CheckCircle
 } from 'lucide-react';
 
 // Sample data
@@ -42,6 +47,39 @@ const categoryData = [
   { name: 'Books', value: 1800, color: '#F59E0B' },
   { name: 'Home & Garden', value: 2100, color: '#EF4444' },
   { name: 'Sports', value: 1500, color: '#8B5CF6' },
+];
+
+const funnelData = [
+  { 
+    name: 'Website Visitors', 
+    value: 10000, 
+    color: '#3B82F6',
+    icon: <Eye className="w-4 h-4" />
+  },
+  { 
+    name: 'Product Views', 
+    value: 6500, 
+    color: '#10B981',
+    icon: <MousePointer className="w-4 h-4" />
+  },
+  { 
+    name: 'Add to Cart', 
+    value: 2800, 
+    color: '#F59E0B',
+    icon: <ShoppingCart className="w-4 h-4" />
+  },
+  { 
+    name: 'Checkout Started', 
+    value: 1200, 
+    color: '#EF4444',
+    icon: <CreditCard className="w-4 h-4" />
+  },
+  { 
+    name: 'Purchase Complete', 
+    value: 850, 
+    color: '#8B5CF6',
+    icon: <CheckCircle className="w-4 h-4" />
+  }
 ];
 
 function App() {
@@ -112,6 +150,15 @@ function App() {
                 title="Weekly Sales" 
                 data={salesData} 
                 color="#10B981"
+              />
+            </div>
+
+            {/* Conversion Funnel */}
+            <div className="mb-8">
+              <FunnelChart 
+                title="Sales Conversion Funnel" 
+                data={funnelData}
+                showConversionRates={true}
               />
             </div>
 
