@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { TrendingDown, Users, ShoppingCart, CreditCard, CheckCircle } from 'lucide-react';
+import { TrendingDown } from 'lucide-react';
 
 interface FunnelStage {
   name: string;
@@ -28,49 +28,55 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+    <Card className="overflow-hidden shadow-lg border-0 bg-gradient-to-br from-white to-gray-50">
+      <CardHeader className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 text-white border-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center space-x-2">
-            <TrendingDown className="w-5 h-5 text-blue-600" />
-            <span>{title}</span>
+          <CardTitle className="flex items-center space-x-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+              <TrendingDown className="w-6 h-6" />
+            </div>
+            <span className="text-xl font-bold">{title}</span>
           </CardTitle>
-          <Badge variant="info" size="sm">
+          <Badge variant="default" size="sm" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
             Overall: {calculateConversionRate(data[data.length - 1].value, data[0].value)}%
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="p-6">
-        <div className="space-y-4">
+      <CardContent className="p-8">
+        <div className="space-y-6">
           {data.map((stage, index) => {
             const widthPercentage = (stage.value / maxValue) * 100;
             const conversionRate = index > 0 ? calculateConversionRate(stage.value, data[index - 1].value) : 100;
             const dropOffRate = index > 0 ? (100 - parseFloat(conversionRate)).toFixed(1) : '0.0';
             
             return (
-              <div key={stage.name} className="relative">
+              <div key={stage.name} className="relative group">
                 {/* Stage Bar */}
                 <div className="relative">
                   <div 
-                    className="h-16 rounded-lg shadow-sm border border-gray-100 flex items-center justify-between px-4 transition-all duration-300 hover:shadow-md"
+                    className="h-20 rounded-2xl shadow-lg border-0 flex items-center justify-between px-6 transition-all duration-500 hover:shadow-xl hover:scale-[1.02] cursor-pointer"
                     style={{ 
                       width: `${widthPercentage}%`,
-                      background: `linear-gradient(135deg, ${stage.color}15, ${stage.color}25)`,
-                      borderLeft: `4px solid ${stage.color}`
+                      background: `linear-gradient(135deg, ${stage.color}20, ${stage.color}35, ${stage.color}20)`,
+                      borderLeft: `6px solid ${stage.color}`,
+                      boxShadow: `0 8px 32px ${stage.color}20`
                     }}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-4">
                       <div 
-                        className="p-2 rounded-lg"
-                        style={{ backgroundColor: `${stage.color}20` }}
+                        className="p-3 rounded-xl shadow-lg backdrop-blur-sm"
+                        style={{ 
+                          backgroundColor: `${stage.color}25`,
+                          boxShadow: `0 4px 16px ${stage.color}30`
+                        }}
                       >
-                        <div style={{ color: stage.color }}>
+                        <div style={{ color: stage.color }} className="w-6 h-6">
                           {stage.icon}
                         </div>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{stage.name}</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-bold text-gray-900 text-lg">{stage.name}</p>
+                        <p className="text-gray-600 font-medium">
                           {stage.value.toLocaleString()} users
                         </p>
                       </div>
@@ -80,12 +86,13 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
                       <div className="text-right">
                         <Badge 
                           variant={parseFloat(conversionRate) >= 70 ? 'success' : parseFloat(conversionRate) >= 40 ? 'warning' : 'error'}
-                          size="sm"
+                          size="md"
+                          className="font-bold shadow-lg"
                         >
                           {conversionRate}%
                         </Badge>
                         {index > 0 && (
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-sm text-gray-500 mt-2 font-medium">
                             -{dropOffRate}% drop-off
                           </p>
                         )}
@@ -93,21 +100,21 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
                     )}
                   </div>
                   
-                  {/* Connection Line */}
+                  {/* Enhanced Connection Line */}
                   {index < data.length - 1 && (
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="w-0.5 h-4 bg-gray-300"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full -mt-1 -ml-0.5"></div>
+                    <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <div className="w-1 h-6 bg-gradient-to-b from-gray-400 to-gray-300 rounded-full"></div>
+                      <div className="w-4 h-4 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full -mt-2 -ml-1.5 shadow-lg border-2 border-white"></div>
                     </div>
                   )}
                 </div>
                 
-                {/* Drop-off Visualization */}
+                {/* Enhanced Drop-off Visualization */}
                 {index > 0 && (
-                  <div className="absolute -top-1 right-0 flex items-center space-x-2 text-xs text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                      <span>{(data[index - 1].value - stage.value).toLocaleString()} lost</span>
+                  <div className="absolute -top-2 right-4 flex items-center space-x-2 text-sm">
+                    <div className="flex items-center space-x-2 bg-red-50 px-3 py-1 rounded-full border border-red-200">
+                      <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-500 rounded-full shadow-sm"></div>
+                      <span className="text-red-700 font-medium">{(data[index - 1].value - stage.value).toLocaleString()} lost</span>
                     </div>
                   </div>
                 )}
@@ -116,32 +123,32 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
           })}
         </div>
         
-        {/* Summary Stats */}
-        <div className="mt-8 pt-6 border-t border-gray-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-gray-900">
+        {/* Enhanced Summary Stats */}
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+              <p className="text-3xl font-bold text-gray-900 mb-1">
                 {data[0].value.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Total Visitors</p>
+              <p className="text-sm font-medium text-gray-600">Total Visitors</p>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">
+            <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+              <p className="text-3xl font-bold text-green-600 mb-1">
                 {data[data.length - 1].value.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Conversions</p>
+              <p className="text-sm font-medium text-gray-600">Conversions</p>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">
+            <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-100">
+              <p className="text-3xl font-bold text-purple-600 mb-1">
                 {calculateConversionRate(data[data.length - 1].value, data[0].value)}%
               </p>
-              <p className="text-sm text-gray-600">Conversion Rate</p>
+              <p className="text-sm font-medium text-gray-600">Conversion Rate</p>
             </div>
-            <div className="text-center">
-              <p className="text-2xl font-bold text-red-600">
+            <div className="text-center p-4 bg-gradient-to-br from-red-50 to-pink-50 rounded-xl border border-red-100">
+              <p className="text-3xl font-bold text-red-600 mb-1">
                 {(data[0].value - data[data.length - 1].value).toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Total Drop-offs</p>
+              <p className="text-sm font-medium text-gray-600">Total Drop-offs</p>
             </div>
           </div>
         </div>
